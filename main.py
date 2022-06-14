@@ -3,14 +3,23 @@ import random, time
 import test
 import pygame
 
-# Screen
-WIDTH, HEIGHT = 400, 400
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-
-rand = [random.randint(0, 200) for _ in range(50)]
+WIDTH, HEIGHT = 900, 500
+rand = [random.randint(0, 200) for _ in range(100)]
 
 sort = SortingAlgorithm()
-h = sort.InsertionSort(screen, rand)
 
-print(h)
+algorithms_dict = {"QuickSort": sort.QuickSort, "BubbleSort": sort.BubbleSort,
+ "SelectionSort": sort.SelectionSort, "InsertionSort": sort.InsertionSort}
+algorithms_list = ["QuickSort", "BubbleSort", "SelectionSort", "InsertionSort"]
+
+print("Choose the sorting algorithm:")
+for nb, algorithm in enumerate(algorithms_list):
+    print("\t" + str(nb) + ". " + algorithm)
+choice = int(input())
+
+# Screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+print(rand)
+g = algorithms_dict[algorithms_list[choice]](screen, rand)
+print(g)

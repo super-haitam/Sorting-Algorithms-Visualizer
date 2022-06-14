@@ -1,10 +1,30 @@
 import random
 import pygame
+import time
+
+
+class List:
+    def __init__(self, lst):
+        self.lst = lst
+        self.id_lst = []
+
+
+class Int:
+    def __init__(self, value):
+        pass
 
 
 class SortingAlgorithm:
-    def QuickSort(self, lst):
+    def QuickSort(self, screen, lst):
+        self.ProcessQuickSort(screen, lst)
+
+    def ProcessQuickSort(self, screen, lst):
         if lst:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
             # Pick random pivot
             rand_ind = random.randrange(len(lst))
             pivot = lst[rand_ind]
@@ -17,18 +37,16 @@ class SortingAlgorithm:
             lst[0] = smaller_nums[:]
             lst[2] = bigger_nums[:]
             
-            quick_sorted = [self.QuickSort(lst[0]), pivot, self.QuickSort(lst[2])]
-            for n in range(len(quick_sorted)):
-                if quick_sorted[n] == []:
-                    quick_sorted[n] = None
-                elif isinstance(quick_sorted[n], list):
-                    if len(quick_sorted[n]) == 1:
-                        quick_sorted[n] = quick_sorted[n][0]
-            return [i for i in quick_sorted if i is not None]
+            # Remove all empty lists
+            quick_sorted = [self.ProcessQuickSort(screen, lst[0]), pivot, self.ProcessQuickSort(screen, lst[2])]
+            
+            self.draw(screen, self.FixQuickSortReturn(quick_sorted))
+
+            return quick_sorted
         else:
             return []
     
-    def FixQuickSortReturn(self, temp):
+    def FixQuickSortReturn(self, temp):  # Make the self.QuickSort return 1d array
         # Count is the number of lists in l
         count = len([i for i in temp if isinstance(i, list)])
         
@@ -42,32 +60,48 @@ class SortingAlgorithm:
 
             temp = l[:]
             count = len([i for i in l if isinstance(i, list)])
-        return l
+        return temp
 
-    def BubbleSort(self, lst):
+    def BubbleSort(self, screen, lst):
+        lst = lst[:]
         num_viewed_integers = 0
-        for a in range(len(lst)):
-            for b in range(a+1, len(lst)-num_viewed_integers):
-                if lst[b] < lst[a]:
+        for _ in range(len(lst)-1):
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+            for a in range(0, len(lst)-num_viewed_integers-1):
+                if lst[a+1] < lst[a]:
                     temp = lst[a]
-                    lst[a] = lst[b]
-                    lst[b] = temp
+                    lst[a] = lst[a+1]
+                    lst[a+1] = temp
             num_viewed_integers += 1
+
+            self.draw(screen, lst)
         return lst
 
-    def SelectionSort(self, lst):
+    def SelectionSort(self,screen, lst):
         lst = lst[:]
         for num in range(len(lst)):
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
             # Index it in the rest of the list, not in all of it, cuz it could select a sorted num
             index_minimun = lst[num:].index(min(lst[num:])) + num
 
             temp = lst[num]
             lst[num] = lst[index_minimun]
             lst[index_minimun] = temp
+
+            self.draw(screen, lst)
         return lst
 
     def InsertionSort(self, screen, lst):
-        for num, i in enumerate(lst[:-1]):
+        lst = lst[:]
+        for num in range(len(lst[:-1])):
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
@@ -75,21 +109,22 @@ class SortingAlgorithm:
 
             next_num = lst[num+1]
             
-            if next_num < i:
+            if next_num <= lst[num]:
                 for n, j in enumerate(lst[:num+1]):
-                    if j < next_num:
-                        lst[num+1] = j
-                        lst.insert(next_num, n)
+                    if next_num < j:
+                        lst.pop(num+1)
+                        lst.insert(n, next_num)
+                        break
             self.draw(screen, lst)
-        return lst      
+        return lst
 
     def draw(self, screen, lst):
         screen.fill((0, 0, 0))
 
-        w = screen.get_width()/len(lst)
-        maximum = max(lst)
+        w = screen.get_width() / len(lst)
         for num, el in enumerate(lst):
-            h = screen.get_height()/maximum * el
+            h = screen.get_height()/(max(lst)+1) * el
             rect = pygame.Rect([num*w, screen.get_height()-h, w, h])
             pygame.draw.rect(screen, (255, 255, 255), rect)
+
         pygame.display.flip()
