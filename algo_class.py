@@ -1,10 +1,8 @@
 import random
+import pygame
 
 
 class SortingAlgorithm:
-    def __init__(self, x, y):
-        pass
-
     def QuickSort(self, lst):
         if lst:
             # Pick random pivot
@@ -68,8 +66,13 @@ class SortingAlgorithm:
             lst[index_minimun] = temp
         return lst
 
-    def InsertionSort(self, lst):
+    def InsertionSort(self, screen, lst):
         for num, i in enumerate(lst[:-1]):
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
             next_num = lst[num+1]
             
             if next_num < i:
@@ -77,4 +80,16 @@ class SortingAlgorithm:
                     if j < next_num:
                         lst[num+1] = j
                         lst.insert(next_num, n)
+            self.draw(screen, lst)
         return lst      
+
+    def draw(self, screen, lst):
+        screen.fill((0, 0, 0))
+
+        w = screen.get_width()/len(lst)
+        maximum = max(lst)
+        for num, el in enumerate(lst):
+            h = screen.get_height()/maximum * el
+            rect = pygame.Rect([num*w, screen.get_height()-h, w, h])
+            pygame.draw.rect(screen, (255, 255, 255), rect)
+        pygame.display.flip()
