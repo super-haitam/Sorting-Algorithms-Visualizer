@@ -1,67 +1,8 @@
-import random
 import pygame
 import time
 
 
-class List:
-    def __init__(self, lst):
-        self.lst = lst
-        self.id_lst = []
-
-
-class Int:
-    def __init__(self, value):
-        pass
-
-
 class SortingAlgorithm:
-    def QuickSort(self, screen, lst):
-        self.ProcessQuickSort(screen, lst)
-
-    def ProcessQuickSort(self, screen, lst):
-        if lst:
-            events = pygame.event.get()
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            # Pick random pivot
-            rand_ind = random.randrange(len(lst))
-            pivot = lst[rand_ind]
-            lst = [lst[:rand_ind] if 0 <= rand_ind-1 else [], pivot, lst[rand_ind+1:]]
-            
-            # Nums that will be moved
-            smaller_nums = [i for i in lst[0]+lst[2] if i < pivot]  # From Right to Left
-            bigger_nums = [i for i in lst[0]+lst[2] if pivot <= i]  # From Left to Right
-
-            lst[0] = smaller_nums[:]
-            lst[2] = bigger_nums[:]
-            
-            # Remove all empty lists
-            quick_sorted = [self.ProcessQuickSort(screen, lst[0]), pivot, self.ProcessQuickSort(screen, lst[2])]
-            
-            self.draw(screen, self.FixQuickSortReturn(quick_sorted))
-
-            return quick_sorted
-        else:
-            return []
-    
-    def FixQuickSortReturn(self, temp):  # Make the self.QuickSort return 1d array
-        # Count is the number of lists in l
-        count = len([i for i in temp if isinstance(i, list)])
-        
-        while count:
-            l = []
-            for i in temp:
-                if isinstance(i, int):
-                    l.append(i)
-                elif isinstance(i, list):
-                    l.extend(i)
-
-            temp = l[:]
-            count = len([i for i in l if isinstance(i, list)])
-        return temp
-
     def BubbleSort(self, screen, lst):
         lst = lst[:]
         num_viewed_integers = 0

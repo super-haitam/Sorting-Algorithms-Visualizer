@@ -1,16 +1,16 @@
-from algo_class import SortingAlgorithm 
-import random, time
-import test
+import random
 import pygame
+from algo_class import SortingAlgorithm 
+
 
 WIDTH, HEIGHT = 900, 500
-rand = [random.randint(0, 200) for _ in range(100)]
+rand = [random.randint(0, 500) for _ in range(WIDTH)]
+# rand = [0, 7, 2, 5, 0, 3]
 
 sort = SortingAlgorithm()
 
-algorithms_dict = {"QuickSort": sort.QuickSort, "BubbleSort": sort.BubbleSort,
- "SelectionSort": sort.SelectionSort, "InsertionSort": sort.InsertionSort}
-algorithms_list = ["QuickSort", "BubbleSort", "SelectionSort", "InsertionSort"]
+algorithms_dict = {"BubbleSort": sort.BubbleSort, "SelectionSort": sort.SelectionSort, "InsertionSort": sort.InsertionSort}
+algorithms_list = ["BubbleSort", "SelectionSort", "InsertionSort"]
 
 print("Choose the sorting algorithm:")
 for nb, algorithm in enumerate(algorithms_list):
@@ -19,7 +19,6 @@ choice = int(input())
 
 # Screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Sorting Algorithms Visualizer")
 
-print(rand)
-g = algorithms_dict[algorithms_list[choice]](screen, rand)
-print(g)
+algorithms_dict[algorithms_list[choice]].__call__(screen, rand)
