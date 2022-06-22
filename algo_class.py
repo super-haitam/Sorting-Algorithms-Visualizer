@@ -1,8 +1,84 @@
+# Give up on QuickSort, and all algorithms requiring recursivity
 import pygame
-import time
 
 
 class SortingAlgorithm:
+    def OddEvenSort(self, screen, lst):
+        lst = lst[:]
+        for _ in range(len(lst)//2):
+            print(_)
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return lst
+
+            if len(lst)%2 == 0:
+                # Even Sort
+                even = [(i, lst[num*2+1]) for num, i in enumerate(lst[:: 2])]
+                lst = self.SortOddEvenList(even)
+                
+                # Odd Sort
+                first, last = lst[0], lst[-1]
+                odd = [(i, lst[num*2+2]) for num, i in enumerate(lst[1: -1: 2])]
+                lst = [first] + self.SortOddEvenList(odd) + [last]
+
+            else:
+                # Even Sort
+                last = lst[-1]
+                even = [(i, lst[num*2+1]) for num, i in enumerate(lst[: -1: 2])]
+                lst = self.SortOddEvenList(even) + [last]
+                
+                # Odd Sort
+                first = lst[0]
+                odd = [(i, lst[num*2+2]) for num, i in enumerate(lst[1:: 2])]
+                lst = [first] + self.SortOddEvenList(odd)     
+            
+            self.draw(screen, lst)
+
+        return lst
+
+    def SortOddEvenList(self, lst):
+        lst = lst[:]
+        for num, (a, b) in enumerate(lst):
+            if b < a:
+                # Swap them
+                lst[num] = (b, a)
+        
+        l = []
+        for tupl in lst:
+            l.append(tupl[0])
+            l.append(tupl[1])
+        return l
+
+    def CocktailShackerSort(self, screen, lst):
+        lst = lst[:]
+        num_viewed_integers = 0
+        while lst != sorted(lst):
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return lst
+
+            # Left to Right
+            for a in range(0, len(lst)-num_viewed_integers-1):
+                if lst[a+1] < lst[a]:
+                    temp = lst[a]
+                    lst[a] = lst[a+1]
+                    lst[a+1] = temp
+
+            # Right to Left
+            for a in range(len(lst)-1, num_viewed_integers, -1):
+                if lst[a] < lst[a-1]:
+                    temp = lst[a]
+                    lst[a] = lst[a-1]
+                    lst[a-1] = temp
+            num_viewed_integers += 1
+
+            self.draw(screen, lst)
+        return lst
+
     def BubbleSort(self, screen, lst):
         lst = lst[:]
         num_viewed_integers = 0
