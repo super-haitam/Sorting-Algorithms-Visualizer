@@ -1,49 +1,9 @@
 # Give up on QuickSort, and all algorithms requiring recursivity
+# Did the CountingSort but removed it cuz it was too similar to SelectionSort
 import pygame
 
 
 class SortingAlgorithm:
-    def CountingSort(self, screen, lst):
-        lst = lst[:]
-
-        # Do a dictionary with each value: N of occurences
-        dictionary = {n: 0 for n in range(max(lst)+1)}
-        for el in lst:
-            dictionary[el] += 1
-
-        # Modify dictionary so that each N is the sum of all N before it
-        sumN = 0
-        for i in range(max(lst)+1):
-            sumN += dictionary[i]
-            dictionary[i] = sumN
-
-        # Each N is N of value-1; First element's N is 0
-        for i in range(max(lst), 0, -1):
-            dictionary[i] = dictionary[i-1]
-        dictionary[0] = 0
-
-        number = 0
-        for num in range(len(lst)):
-            events = pygame.event.get()
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return lst
-            
-            found = False
-            for j in dictionary:
-                if dictionary[j] == num:
-                    found = True
-                    lst[num] = j
-                    number = j
-
-            if not found:
-                lst[num] = number
-
-            self.draw(screen, lst)
-            
-        return lst
-
     def CombSort(self, screen, lst):
         # Sometimes it returns the Great One an some other times it doesn't 
         lst = lst[:]
@@ -58,7 +18,7 @@ class SortingAlgorithm:
 
             gap = int(gap // 1.3)
             
-            for num, i in enumerate(lst[:len(lst)-gap]):
+            for num in range(len(lst[:len(lst)-gap])):
                 if lst[num+gap] < lst[num]:
                     temp = lst[num+gap]
                     lst[num+gap] = lst[num]
